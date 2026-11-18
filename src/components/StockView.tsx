@@ -241,7 +241,7 @@ export const StockView: React.FC<StockViewProps> = ({ items, uoms, conversions, 
                     <td className="py-3 px-3 text-right font-mono text-slate-500">{item.tax_rate}%</td>
                     <td className="py-3 px-3 text-right">
                       <div className="flex items-center justify-end gap-1.5">
-                        {isLow && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" title="Low Stock Warning" />}
+                        {isLow && <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />}
                         <span className={`font-mono font-bold ${isLow ? 'text-amber-600' : 'text-slate-900'}`}>
                           {item.current_stock}
                         </span>
