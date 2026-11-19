@@ -1,8 +1,8 @@
-FROM node:20-bookworm-slim
+FROM node:20-bookworm-slim AS builder
 
 WORKDIR /app
 
-# Install build dependencies for better-sqlite3 native compilation
+# Install native compilation dependencies
 RUN apt-get update && apt-get install -y python3 make g++ gcc libc6-dev && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
@@ -10,9 +10,22 @@ RUN npm install
 
 COPY . .
 RUN npm run build
+# Compile TypeScript backend to pure JavaScript
+RUN npx tsc server/index.ts server/db.ts --outDir dist-server --module ESNext --moduleResolution bundler --target ES2022 --skipLibCheck
+
+# Production runner image
+FROM node:20-bookworm-slim
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=10000
+
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/dist-server ./server
 
 EXPOSE 10000
-ENV PORT=10000
-ENV NODE_ENV=production
 
-CMD ["npm", "run", "server"]
+CMD ["node", "server/index.js"]

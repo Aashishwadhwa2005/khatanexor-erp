@@ -201,7 +201,7 @@ export function initDatabase() {
   }
 
   // Seed sample products if none exist
-  const itemCount = db.prepare('SELECT count(*) as count FROM items').get().count;
+  const itemCount = (db.prepare('SELECT count(*) as count FROM items').get() as any)?.count || 0;
   if (itemCount === 0) {
     const insertItem = db.prepare(`
       INSERT INTO items (id, code, name, category, base_uom_id, purchase_price, selling_price, tax_rate, current_stock, min_stock_alert, barcode)
