@@ -1,10 +1,16 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import fs from 'fs';
+import os from 'os';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dbPath = path.resolve(__dirname, 'shop_ledger.db');
+
+// In serverless / Vercel, the only writable directory is os.tmpdir() (/tmp)
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_VERSION;
+const dbDir = isServerless ? os.tmpdir() : __dirname;
+const dbPath = path.resolve(dbDir, 'shop_ledger.db');
 
 export const db = new Database(dbPath);
 db.pragma('journal_mode = WAL');

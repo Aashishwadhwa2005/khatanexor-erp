@@ -1019,6 +1019,10 @@ app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.resolve(distPath, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`KhataNexor Server running smoothly on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`KhataNexor Server running smoothly on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
