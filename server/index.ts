@@ -1014,8 +1014,8 @@ app.get('/api/reports/trial-balance', (req: Request, res: Response) => {
 
 const PORT = process.env.PORT || 3001;
 
-// SPA fallback for frontend client routing
-app.get('*', (req: Request, res: Response) => {
+// SPA fallback for frontend client routing in Express 5
+app.get('/{*splat}', (req: Request, res: Response) => {
   res.sendFile(path.resolve(distPath, 'index.html'));
 });
 
